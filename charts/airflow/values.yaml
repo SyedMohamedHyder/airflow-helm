@@ -1,0 +1,122 @@
+nameOverride:  # Name override for the Helm release
+fullnameOverride:  # Full name override for the Helm release
+
+image:
+  repository: airflow-helm
+  tag: latest
+  pullPolicy: IfNotPresent
+
+# Persistent Volume configuration
+persistence:
+  # Storage configuration for the PersistentVolume
+  storage: 5Gi
+  # Storage class for the PersistentVolume
+  storageClassName: manual
+  # Path for the hostPath
+  path: ""
+
+# PostgreSQL configuration
+pg:
+  enabled: true
+  # Authentication configuration
+  auth:
+    # Password for the 'postgres' user in PostgreSQL
+    postgresPassword: postgres
+    # Username for the 'airflow' user in PostgreSQL
+    username: airflow
+    # Password for the 'airflow' user in PostgreSQL
+    password: airflow
+    # Database name in PostgreSQL
+    database: airflow
+  # Primary node configuration
+  primary:
+    # Network policy configuration for the primary node
+    networkPolicy:
+      # Flag indicating whether network policy is enabled for the primary node
+      enabled: false
+    persistence:
+      # Size of the PersistentVolumeClaim (PVC) for PostgreSQL data
+      size: 1Gi
+
+# Redis configuration
+redis:
+  enabled: true
+  architecture: standalone
+  networkPolicy:
+    enabled: false
+  auth:
+    enabled: false
+  master:
+    persistence:
+      # Size of the PersistentVolumeClaim (PVC) for Redis data
+      size: 1Gi
+
+# Common Secrets configuration
+commonSecrets:
+  # Don't use the following defaults for secrets
+  AIRFLOW__CORE__EXECUTOR: Q2VsZXJ5RXhlY3V0b3I=
+  AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: cG9zdGdyZXNxbCtwc3ljb3BnMjovL2FpcmZsb3c6YWlyZmxvd0BhaXJmbG93LXBnL2FpcmZsb3c=
+  AIRFLOW__CELERY__RESULT_BACKEND: ZGIrcG9zdGdyZXNxbDovL2FpcmZsb3c6YWlyZmxvd0BhaXJmbG93LXBnL2FpcmZsb3c=
+  AIRFLOW__CELERY__BROKER_URL: cmVkaXM6Ly86QGFpcmZsb3ctcmVkaXMtbWFzdGVyOjYzNzkvMA==
+  AIRFLOW__CORE__FERNET_KEY: ""
+  AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: dHJ1ZQ==
+  AIRFLOW__CORE__LOAD_EXAMPLES: ZmFsc2U=
+  AIRFLOW__API__AUTH_BACKENDS: YWlyZmxvdy5hcGkuYXV0aC5iYWNrZW5kLmJhc2ljX2F1dGgsYWlyZmxvdy5hcGkuYXV0aC5iYWNrZW5kLnNlc3Npb24=
+  AIRFLOW__SCHEDULER__ENABLE_HEALTH_CHECK: dHJ1ZQ==
+  AIRFLOW__CORE__DAGBAG_IMPORT_TIMEOUT: MTYwLjA=
+
+# Initialization configuration
+init:
+  env:
+    _AIRFLOW_DB_UPGRADE: true
+    _AIRFLOW_WWW_USER_CREATE: true
+    _AIRFLOW_WWW_USER_USERNAME: airflow
+    _AIRFLOW_WWW_USER_PASSWORD: airflow
+    _PIP_ADDITIONAL_REQUIREMENTS: ""
+
+# Webserver configuration
+webserver:
+  # Number of replicas for the webserver
+  replicaCount: 1
+  service:
+    # Service type for the webserver
+    type: NodePort
+    nodePorts:
+      # Node port for HTTP
+      http: 30080
+      # Node port for HTTPS
+      https: 30443
+    ports:
+      # Container port for HTTP
+      http: 8080
+      # Container port for HTTPS
+      https: 443
+
+# Scheduler configuration
+scheduler:
+  # Number of replicas for the scheduler
+  replicaCount: 1
+
+# Worker configuration
+worker:
+  # Number of replicas for the worker
+  replicaCount: 1
+
+# Triggerer configuration
+triggerer:
+  # Number of replicas for the triggerer
+  replicaCount: 1
+
+# Flower configuration
+flower:
+  # Flag indicating whether Flower is enabled
+  enabled: false
+  service:
+    # Service type for Flower
+    type: NodePort
+    nodePorts:
+      # Node port for Flower
+      flower: 30555
+    ports:
+      # Container port for Flower
+      flower: 5555

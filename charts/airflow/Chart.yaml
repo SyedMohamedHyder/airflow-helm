@@ -1,0 +1,20 @@
+apiVersion: v2
+name: airflow
+description: A Helm chart for Kubernetes
+
+type: application
+version: 0.1.0
+appVersion: "0.1.0"
+
+dependencies:
+  - name: postgresql
+    alias: pg
+    version: "14.0.1"
+    repository: "https://charts.bitnami.com/bitnami"
+    condition: pg.enabled
+
+  - name: redis
+    alias: redis
+    version: "18.12.1"
+    repository: "https://charts.bitnami.com/bitnami"
+    condition: redis.enabled

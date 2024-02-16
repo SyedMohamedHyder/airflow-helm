@@ -1,0 +1,14 @@
+Get the Airflow Webserver URL:
+a. If your Kubernetes cluster is running on a cloud provider, you may need to configure an ingress controller or load balancer to expose the Airflow webserver externally. Please refer to your cloud provider's documentation for more information on setting up ingress or load balancing.
+
+b. If your Kubernetes cluster is running in a local environment or on-premises and you have configured the service type as NodePort, you can access the Airflow webserver using the NodePort assigned to the service.
+    Example:
+    ```
+    export NODE_IP=$(kubectl get nodes --selector='!node-role.kubernetes.io/master' -o jsonpath="{.items[0].status.addresses[?(@.type=='InternalIP')].address}")
+    export NODE_PORT=$(kubectl get svc airflow-webserver -o jsonpath="{.spec.ports[?(@.name=='http')].nodePort}")
+    echo "Airflow Webserver URL: http://$NODE_IP:$NODE_PORT"
+    ```
+
+    If the above NODE_IP is not accessible for you, try using http://localhost:$NODE_PORT to access the webserver if you are within the kubernetes cluster.
+
+Note: Please ensure that your Kubernetes cluster's network policies and firewall rules allow access to the Airflow webserver service.

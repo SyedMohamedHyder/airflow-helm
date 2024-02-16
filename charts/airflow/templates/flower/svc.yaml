@@ -1,0 +1,24 @@
+{{- if .Values.flower.enabled }}
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "airflow.flower.name" . }}
+  labels:
+    {{- include "airflow.labels" . | nindent 4 }}
+    app.kubernetes.io/component: flower
+spec:
+  ports:
+  - name: flower
+    protocol: TCP
+    port: {{ .Values.flower.service.ports.flower | default 5555 }}
+    {{- if eq .Values.flower.service.type "NodePort" }}
+    nodePort: {{ .Values.flower.service.nodePorts.flower | default 30555 }}
+    {{- end }}
+    targetPort: flower
+  selector:
+    {{- include "airflow.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: flower
+  type: {{ .Values.flower.service.type | default "ClusterIP" }}
+{{- end }}

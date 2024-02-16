@@ -1,0 +1,48 @@
+---
+
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "airflow.init.name" . }}
+  labels:
+    {{- include "airflow.labels" . | nindent 4 }}
+  annotations:
+    {{- include "airflow.checksum" . | nindent 4 }}
+    checksum/config: {{ include (print $.Template.BasePath "/init/configmap.yaml") . | sha256sum }}
+spec:
+  completions: 1
+  parallelism: 1
+  template:
+    metadata:
+      name: {{ include "airflow.init.name" . }}
+      labels: {{- include "airflow.labels" . | nindent 8 }}
+    spec:
+      containers:
+      - name: airflow-init
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        command:
+        - /bin/bash
+        - -c
+        - /scripts/airflow-init.sh
+        env:
+        {{- range $key, $value := .Values.init.env }}
+        - name: {{ $key | quote }}
+          value: {{ $value | quote }}
+        {{- end }}
+        securityContext:
+          {{- include "airflow.securityContext" (dict "userID" 0 "groupID" 0) | nindent 10 }}
+        envFrom:
+          {{- include "airflow.commonSecrets.env" . | nindent 8 }}
+        volumeMounts:
+          {{- include "airflow.home.volumeMount" . | nindent 8 }}
+        - name: airflow-init-script
+          mountPath: /scripts
+          readOnly: true
+      restartPolicy: OnFailure
+      volumes:
+      {{- include "airflow.home.pvc" . | nindent 6 }}
+      - name: airflow-init-script
+        configMap:
+          name: {{ include "airflow.init.name" . }}
+          defaultMode: 0755

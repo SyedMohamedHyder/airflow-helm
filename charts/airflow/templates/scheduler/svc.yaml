@@ -1,0 +1,19 @@
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "airflow.scheduler.name" . }}
+  labels:
+    {{- include "airflow.labels" . | nindent 4 }}
+    app.kubernetes.io/component: scheduler
+spec:
+  ports:
+  - name: scheduler
+    protocol: TCP
+    port: 8974
+    targetPort: scheduler
+  selector:
+    {{- include "airflow.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: scheduler
+  type: ClusterIP

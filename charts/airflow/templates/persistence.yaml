@@ -1,0 +1,42 @@
+---
+
+{{- with .Values.persistence }}
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{ include "airflow.fullname" $ }}
+  labels:
+    {{- include "airflow.labels" $ | nindent 4 }}
+    app.kubernetes.io/component: airflow-home
+spec:
+  storageClassName: {{ .storageClassName | default "manual" }}
+  capacity:
+    storage: {{ .storage }}
+  accessModes:
+    - ReadWriteMany
+  hostPath:
+    path: {{ .path }}
+{{- end }}
+
+---
+
+{{- with .Values.persistence }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "airflow.claim.name" $ }}
+  labels:
+    {{- include "airflow.labels" $ | nindent 4 }}
+    app.kubernetes.io/component: airflow-home
+spec:
+  selector:
+    matchLabels:
+      {{- include "airflow.selectorLabels" $ | nindent 6 }}
+      app.kubernetes.io/component: airflow-home
+  storageClassName: {{ .storageClassName | default "manual" }}
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: {{ .storage }}
+{{- end }}

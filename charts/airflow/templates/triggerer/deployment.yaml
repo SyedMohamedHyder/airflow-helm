@@ -1,0 +1,40 @@
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "airflow.triggerer.name" . }}
+  labels:
+    {{- include "airflow.labels" . | nindent 4 }}
+    app.kubernetes.io/component: triggerer
+  annotations:
+    {{- include "airflow.checksum" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.triggerer.replicaCount | default 1 }}
+  selector:
+    matchLabels:
+      {{- include "airflow.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: triggerer
+  template:
+    metadata:
+      labels:
+        {{- include "airflow.labels" . | nindent 8 }}
+        app.kubernetes.io/component: triggerer
+    spec:
+      containers:
+      - name: triggerer
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        args:
+        - triggerer
+        ports:
+        - name: triggerer
+          containerPort: 8794
+        securityContext:
+          {{- include "airflow.securityContext" (dict "userID" 50000 "groupID" 0) | nindent 10 }}
+        envFrom:
+          {{- include "airflow.commonSecrets.env" . | nindent 8 }}
+        {{- include "airflow.probes" (dict "port" "triggerer" "probeType" "tcpSocket") | nindent 8 }}
+        volumeMounts:
+        {{- include "airflow.home.volumeMount" . | nindent 8 }}
+      volumes:
+      {{- include "airflow.home.pvc" . | nindent 6 }}
