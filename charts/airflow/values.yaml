@@ -2,9 +2,14 @@ nameOverride:  # Name override for the Helm release
 fullnameOverride:  # Full name override for the Helm release
 
 image:
-  repository: airflow-helm
-  tag: latest
+  # Replace the repository with your custom if you have built one.
+  repository: syedhyder1362k/cohesive
   pullPolicy: IfNotPresent
+  tag: latest
+
+machine:
+  # Replace this with false for windows machine.
+  windows: true
 
 # Persistent Volume configuration
 persistence:
@@ -13,7 +18,8 @@ persistence:
   # Storage class for the PersistentVolume
   storageClassName: manual
   # Path for the hostPath
-  path: ""
+  # Replace with your airflow home
+  path: "/c/Users/kunmeer/go/src/github.com/cmo-pce-e2e-build"
 
 # PostgreSQL configuration
 pg:
@@ -110,7 +116,7 @@ triggerer:
 # Flower configuration
 flower:
   # Flag indicating whether Flower is enabled
-  enabled: false
+  enabled: true
   service:
     # Service type for Flower
     type: NodePort

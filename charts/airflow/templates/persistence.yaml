@@ -15,7 +15,11 @@ spec:
   accessModes:
     - ReadWriteMany
   hostPath:
+    {{- if $.Values.machine.windows }}
+    path: "/run/desktop/mnt/host{{ .path }}"
+    {{- else }} 
     path: {{ .path }}
+    {{ end }}
 {{- end }}
 
 ---
