@@ -20,6 +20,8 @@ spec:
       labels:
         {{- include "airflow.labels" . | nindent 8 }}
         app.kubernetes.io/component: webserver
+      annotations:
+        {{- include "airflow.checksum" . | nindent 8 }}
     spec:
       containers:
       - name: webserver

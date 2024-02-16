@@ -20,6 +20,8 @@ spec:
       labels:
         {{- include "airflow.labels" . | nindent 8 }}
         app.kubernetes.io/component: worker
+      annotations:
+        {{- include "airflow.checksum" . | nindent 8 }}
     spec:
       containers:
       - name: worker

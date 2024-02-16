@@ -15,7 +15,11 @@ spec:
   template:
     metadata:
       name: {{ include "airflow.init.name" . }}
-      labels: {{- include "airflow.labels" . | nindent 8 }}
+      labels:
+        {{- include "airflow.labels" . | nindent 8 }}
+      annotations:
+        {{- include "airflow.checksum" . | nindent 8 }}
+        checksum/config: {{ include (print $.Template.BasePath "/init/configmap.yaml") . | sha256sum }}
     spec:
       containers:
       - name: airflow-init
