@@ -3,6 +3,27 @@ entries:
   airflow:
   - apiVersion: v2
     appVersion: 0.2.0
+    created: "2024-02-19T15:57:46.397175302Z"
+    dependencies:
+    - alias: pg
+      condition: pg.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 14.0.1
+    - alias: redis
+      condition: redis.enabled
+      name: redis
+      repository: https://charts.bitnami.com/bitnami
+      version: 18.12.1
+    description: A Helm chart for Kubernetes
+    digest: f084e9fd552f3dc9bc71d6e40a37352d38442117fc3029f52bf8fe5081ebb864
+    name: airflow
+    type: application
+    urls:
+    - https://github.com/SyedMohamedHyder/airflow-helm/releases/download/airflow-0.2.2/airflow-0.2.2.tgz
+    version: 0.2.2
+  - apiVersion: v2
+    appVersion: 0.2.0
     created: "2024-02-16T17:14:41.154233207Z"
     dependencies:
     - alias: pg
@@ -64,4 +85,4 @@ entries:
     urls:
     - https://github.com/SyedMohamedHyder/airflow-helm/releases/download/airflow-0.1.0/airflow-0.1.0.tgz
     version: 0.1.0
-generated: "2024-02-16T17:14:41.154251842Z"
+generated: "2024-02-19T15:57:46.397190261Z"
