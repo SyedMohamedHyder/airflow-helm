@@ -26,6 +26,7 @@ spec:
       containers:
       - name: worker
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
         args:
         - celery
         - worker

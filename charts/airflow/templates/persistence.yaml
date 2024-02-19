@@ -15,7 +15,7 @@ spec:
   accessModes:
     - ReadWriteMany
   hostPath:
-    {{- if $.Values.machine.windows }}
+    {{- if $.Values.dockerInWSL }}
     path: "/run/desktop/mnt/host{{ .path }}"
     {{- else }} 
     path: {{ .path }}
