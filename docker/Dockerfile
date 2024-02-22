@@ -5,6 +5,10 @@ ENV HTTPS_PROXY=
 ENV http_proxy=
 ENV https_proxy=
 
+USER root
+
+RUN apt update && apt install openssh-server openssh-client ansible -y
+
 USER airflow
 
 COPY requirements.txt .
