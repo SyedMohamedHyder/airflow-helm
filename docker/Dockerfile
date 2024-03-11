@@ -1,13 +1,20 @@
 FROM apache/airflow:2.7.3-python3.10
 
-ENV HTTP_PROXY=
-ENV HTTPS_PROXY=
-ENV http_proxy=
-ENV https_proxy=
+ARG http_proxy
+ARG https_proxy
+ARG HTTP_PROXY
+ARG HTTPS_PROXY
+
+ENV http_proxy=${http_proxy}
+ENV https_proxy=${https_proxy}
+ENV HTTP_PROXY=${HTTP_PROXY}
+ENV HTTPS_PROXY=${HTTPS_PROXY}
 
 USER root
 
-RUN apt update && apt install openssh-server openssh-client ansible -y
+RUN apt-get update -y \
+    && apt-get install -y make \
+    && apt-get clean
 
 USER airflow
 
