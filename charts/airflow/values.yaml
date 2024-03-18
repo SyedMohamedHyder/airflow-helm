@@ -72,6 +72,7 @@ commonSecrets:
   AIRFLOW__SCHEDULER__ENABLE_HEALTH_CHECK: dHJ1ZQ==
   AIRFLOW__CORE__DAGBAG_IMPORT_TIMEOUT: MTYwLjA=
   AIRFLOW__WEBSERVER__DEFAULT_DAG_RUN_DISPLAY_NUMBER: MQo=
+  AIRFLOW__WEBSERVER__ENABLE_PROXY_FIX: VHJ1ZQo=
 
 # Initialization configuration
 init:
@@ -87,7 +88,7 @@ webserver:
   # Number of replicas for the webserver
   replicaCount: 1
   # URL prefix for the webserver
-  urlPrefix: /cohesive
+  urlPrefix: ""
   # Service details for the webserver
   service:
     # Service type for the webserver
