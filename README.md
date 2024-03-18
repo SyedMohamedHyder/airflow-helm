@@ -1,188 +1,255 @@
-### Detailed Airflow Helm Chart Setup Guide
+<h3>Detailed Airflow Helm Chart Setup Guide</h3>
 
-This repository provides a simple and quickly deployable Helm chart for an Airflow development environment. However, it's essential to note that this chart is **not suitable for production deployment**. Many security features are disabled, and passwords are hardcoded in the `values.yaml` file.
+<p>This repository provides a simple and quickly deployable Helm chart for an Airflow development environment. However, it's essential to note that this chart is <strong>not suitable for production deployment</strong>. Many security features are disabled, and passwords are hardcoded in the <code>values.yaml</code> file.</p>
 
-#### Prerequisites
+<h4>Prerequisites</h4>
 
-Before deploying Airflow using this Helm chart, ensure you have the following prerequisites:
+<p>Before deploying Airflow using this Helm chart, ensure you have the following prerequisites:</p>
 
-1. **Helm**: Ensure that you have Helm installed on your local machine.
-2. **Airflow Home Directory**: Have an Airflow home directory set up on your local machine. This directory should contain the necessary DAGs, plugins, and other configurations.
-3. **Ingress Controller**: For versions 1.0.0 and above of the chart, you'll need an Ingress controller installed on your local Kubernetes cluster.
-        You can avoid the ingress by disabling the ingress `--set "ingress.enabled=false"`.
+<ol>
+  <li><strong>Helm:</strong> Ensure that you have Helm installed on your local machine.</li>
+  <li><strong>Airflow Home Directory:</strong> Have an Airflow home directory set up on your local machine. This directory should contain the necessary DAGs, plugins, and other configurations.</li>
+  <li><strong>Ingress Controller:</strong> For versions 1.0.0 and above of the chart, you'll need an Ingress controller installed on your local Kubernetes cluster. You can avoid the ingress by disabling the ingress <code>--set "ingress.enabled=false"</code>.</li>
+</ol>
 
-#### Adding Helm Repository
+<h4>Adding Helm Repository</h4>
 
-First, add the Helm repository by running the following command:
+<p>First, add the Helm repository by running the following command:</p>
 
-```bash
-helm repo add syed https://syedmohamedhyder.github.io/airflow-helm/
+<pre><code>helm repo add syed https://syedmohamedhyder.github.io/airflow-helm/
 helm repo update
-```
+</code></pre>
 
-Deploying Airflow
-Now, deploy Airflow using the Helm chart. Replace <path-to-airflow-home> with the path to your Airflow home directory.
+<h4>Deploying Airflow</h4>
 
-For non-Windows users, if you're running Docker in WSL (Windows Subsystem for Linux), you may need to pass the additional flag --set dockerInWSL=false.
+<p>Now, deploy Airflow using the Helm chart. Replace <code>&lt;path-to-airflow-home&gt;</code> with the path to your Airflow home directory.</p>
 
-```bash
-helm install airflow syed/airflow --version 0.3.0 \
+<p>For non-Windows users, if you're running Docker in WSL (Windows Subsystem for Linux), you may need to pass the additional flag <code>--set dockerInWSL=false</code>.</p>
+
+<pre><code>helm install airflow syed/airflow --version 0.3.0 \
   --namespace airflow \
-  --set "persistence.path=<path-to-airflow-home>" \
+  --set "persistence.path=&lt;path-to-airflow-home&gt;" \
   --create-namespace \
   --atomic
-```
+</code></pre>
 
-Ensure that `<path-to-airflow-home>` follows the format `/c/path/to/your/airflow/home` for Windows users.
+<p>Ensure that <code>&lt;path-to-airflow-home&gt;</code> follows the format <code>/c/path/to/your/airflow/home</code> for Windows users.</p>
 
-#### Version 1.0.0 and Above
-For versions 1.0.0 and above of the chart, you'll need an Ingress controller installed in your local Kubernetes cluster. Make sure to set up the Ingress controller before deploying Airflow.
+<h4>Version 1.0.0 and Above</h4>
 
-**Customization:** If you don't have an Ingress controller enabled or don't want to use it, you can modify the values to disable Ingress-related configurations.
+<p>For versions 1.0.0 and above of the chart, you'll need an Ingress controller installed in your local Kubernetes cluster. Make sure to set up the Ingress controller before deploying Airflow.</p>
 
-#### Warning
+<p><strong>Customization:</strong> If you don't have an Ingress controller enabled or don't want to use it, you can modify the values to disable Ingress-related configurations.</p>
 
-Do not use this Helm chart for production deployment. It's intended for development and testing purposes only. Ensure that you understand the security implications, including the hardcoded passwords/tls_certs and disabled security features, before deploying Airflow using this chart.
+<h4>Warning</h4>
 
-## Helm Values
+<p>Do not use this Helm chart for production deployment. It's intended for development and testing purposes only. Ensure that you understand the security implications, including the hardcoded passwords/tls_certs and disabled security features, before deploying Airflow using this chart.</p>
 
-The following is a summary of the **helm values** provided by this chart (see the full list in [`values.yaml`](https://github.com/SyedMohamedHyder/airflow-helm/blob/main/charts/airflow/values.yaml) file).
+<h2>Helm Values</h2>
 
-<details>
-<summary><code>nameOverride</code></summary>
+<p>The following is a summary of the <strong>helm values</strong> provided by this chart (see the full list in <a href="https://github.com/SyedMohamedHyder/airflow-helm/blob/main/charts/airflow/values.yaml">values.yaml</a> file).</p>
 
-Parameter | Description | Default
---- | --- | ---
-`nameOverride` | Name override for the Helm release | `nil`
-`fullnameOverride` | Full name override for the Helm release | `nil`
-</details>
+<table>
+  <tr>
+    <th>Parameter</th>
+    <th>Description</th>
+    <th>Default</th>
+  </tr>
+  <tr>
+    <td><code>image.repository</code></td>
+    <td>The repository of docker image</td>
+    <td><code>syedhyder1362k/cohesive</code></td>
+  </tr>
+  <tr>
+    <td><code>image.pullPolicy</code></td>
+    <td>Image pull policy</td>
+    <td><code>IfNotPresent</code></td>
+  </tr>
+  <tr>
+    <td><code>image.tag</code></td>
+    <td>Tag for the docker image</td>
+    <td><code>latest</code></td>
+  </tr>
+  <tr>
+    <td><code>dockerInWSL</code></td>
+    <td>Flag indicating whether Docker is running in WSL</td>
+    <td><code>false</code></td>
+  </tr>
+  <tr>
+    <td><code>persistence.storage</code></td>
+    <td>Storage configuration for the PersistentVolume</td>
+    <td><code>5Gi</code></td>
+  </tr>
+  <tr>
+    <td><code>persistence.storageClassName</code></td>
+    <td>Storage class for the PersistentVolume</td>
+    <td><code>manual</code></td>
+  </tr>
+  <tr>
+    <td><code>persistence.path</code></td>
+    <td>Path for the hostPath</td>
+    <td><code>"/C/Users/kunmeer/go/src/github.com/cmo-pce-e2e-build"</code></td>
+  </tr>
+  <tr>
+    <td><code>pg.enabled</code></td>
+    <td>Flag indicating whether PostgreSQL is enabled</td>
+    <td><code>true</code></td>
+  </tr>
+  <tr>
+    <td><code>pg.auth.postgresPassword</code></td>
+    <td>Password for the 'postgres' user in PostgreSQL</td>
+    <td><code>postgres</code></td>
+  </tr>
+  <tr>
+    <td><code>pg.auth.username</code></td>
+    <td>Username for the 'airflow' user in PostgreSQL</td>
+    <td><code>airflow</code></td>
+  </tr>
+  <tr>
+    <td><code>pg.auth.password</code></td>
+    <td>Password for the 'airflow' user in PostgreSQL</td>
+    <td><code>airflow</code></td>
+  </tr>
+  <tr>
+    <td><code>pg.auth.database</code></td>
+    <td>Database name in PostgreSQL</td>
+    <td><code>airflow</code></td>
+  </tr>
+  <tr>
+    <td><code>pg.primary.networkPolicy.enabled</code></td>
+    <td>Flag indicating whether network policy is enabled for the primary node</td>
+    <td><code>false</code></td>
+  </tr>
+  <tr>
+    <td><code>pg.primary.persistence.size</code></td>
+    <td>Size of the PersistentVolumeClaim (PVC) for PostgreSQL data</td>
+    <td><code>1Gi</code></td>
+  </tr>
+  <tr>
+    <td><code>redis.enabled</code></td>
+    <td>Flag indicating whether Redis is enabled</td>
+    <td><code>true</code></td>
+  </tr>
+  <tr>
+    <td><code>redis.architecture</code></td>
+    <td>Redis architecture</td>
+    <td><code>standalone</code></td>
+  </tr>
+  <tr>
+    <td><code>redis.networkPolicy.enabled</code></td>
+    <td>Flag indicating whether network policy is enabled for Redis</td>
+    <td><code>false</code></td>
+  </tr>
+  <tr>
+    <td><code>redis.master.persistence.size</code></td>
+    <td>Size of the PersistentVolumeClaim (PVC) for Redis data</td>
+    <td><code>1Gi</code></td>
+  </tr>
+  <tr>
+    <td><code>commonSecrets.*</code></td>
+    <td>Hardcoded values for secrets</td>
+    <td>*Various*</td>
+  </tr>
+  <tr>
+    <td><code>init.env</code></td>
+    <td>Initialization environment variables</td>
+    <td>*Various*</td>
+  </tr>
+  <tr>
+    <td><code>webserver.replicaCount</code></td>
+    <td>Number of replicas for the webserver</td>
+    <td><code>1</code></td>
+  </tr>
+  <tr>
+    <td><code>webserver.urlPrefix</code></td>
+    <td>URL prefix for the webserver</td>
+    <td><code>/cohesive</code></td>
+  </tr>
+  <tr>
+    <td><code>webserver.service.type</code></td>
+    <td>Service type for the webserver</td>
+    <td><code>ClusterIP</code></td>
+  </tr>
+  <tr>
+    <td><code>webserver.service.nodePorts.http</code></td>
+    <td>Node port for HTTP</td>
+    <td><code>30080</code></td>
+  </tr>
+  <tr>
+    <td><code>webserver.service.nodePorts.https</code></td>
+    <td>Node port for HTTPS</td>
+    <td><code>30443</code></td>
+  </tr>
+  <tr>
+    <td><code>webserver.service.ports.http</code></td>
+    <td>Container port for HTTP</td>
+    <td><code>8080</code></td>
+  </tr>
+  <tr>
+    <td><code>webserver.service.ports.https</code></td>
+    <td>Container port for HTTPS</td>
+    <td><code>443</code></td>
+  </tr>
+  <tr>
+    <td><code>scheduler.replicaCount</code></td>
+    <td>Number of replicas for the scheduler</td>
+    <td><code>1</code></td>
+  </tr>
+  <tr>
+    <td><code>worker.replicaCount</code></td>
+    <td>Number of replicas for the worker</td>
+    <td><code>1</code></td>
+  </tr>
+  <tr>
+    <td><code>triggerer.replicaCount</code></td>
+    <td>Number of replicas for the triggerer</td>
+    <td><code>1</code></td>
+  </tr>
+  <tr>
+    <td><code>flower.enabled</code></td>
+    <td>Flag indicating whether Flower is enabled</td>
+    <td><code>true</code></td>
+  </tr>
+  <tr>
+    <td><code>flower.urlPrefix</code></td>
+    <td>URL prefix for Flower</td>
+    <td><code>/flower</code></td>
+  </tr>
+  <tr>
+    <td><code>flower.service.type</code></td>
+    <td>Service type for Flower</td>
+    <td><code>ClusterIP</code></td>
+  </tr>
+  <tr>
+    <td><code>ingress.enabled</code></td>
+    <td>Enable or disable the Ingress resource</td>
+    <td><code>true</code></td>
+  </tr>
+  <tr>
+    <td><code>ingress.class</code></td>
+    <td>Specify the Ingress class to use</td>
+    <td><code>nginx</code></td>
+  </tr>
+  <tr>
+    <td><code>ingress.host</code></td>
+    <td>Specify the host for the Ingress</td>
+    <td><code>hewlettpackard.dev.internal</code></td>
+  </tr>
+  <tr>
+    <td><code>ingress.tls.enabled</code></td>
+    <td>Flag indicating whether TLS is enabled for ingress</td>
+    <td><code>true</code></td>
+  </tr>
+  <tr>
+    <td><code>ingress.tls.crt</code></td>
+    <td>TLS certificate for the ingress</td>
+    <td>*Certificate data*</td>
+  </tr>
+  <tr>
+    <td><code>ingress.tls.key</code></td>
+    <td>TLS key for the ingress</td>
+    <td>*Key data*</td>
+  </tr>
+</table>
 
-<details>
-<summary><code>image.*</code></summary>
-
-Parameter | Description | Default
---- | --- | ---
-`image.repository` | The repository of docker image | `syedhyder1362k/cohesive`
-`image.pullPolicy` | Image pull policy | `IfNotPresent`
-`image.tag` | Tag for the docker image | `latest`
-</details>
-
-<details>
-<summary><code>dockerInWSL</code></summary>
-
-Parameter | Description | Default
---- | --- | ---
-`dockerInWSL` | Flag indicating whether Docker is running in WSL | `false`
-</details>
-
-<details>
-<summary><code>persistence.*</code></summary>
-
-Parameter | Description | Default
---- | --- | ---
-`persistence.storage` | Storage configuration for the PersistentVolume | `5Gi`
-`persistence.storageClassName` | Storage class for the PersistentVolume | `manual`
-`persistence.path` | Path for the hostPath | `"/C/Users/kunmeer/go/src/github.com/cmo-pce-e2e-build"`
-</details>
-
-<details>
-<summary><code>pg.*</code></summary>
-
-Parameter | Description | Default
---- | --- | ---
-`pg.enabled` | Flag indicating whether PostgreSQL is enabled | `true`
-`pg.auth.postgresPassword` | Password for the 'postgres' user in PostgreSQL | `postgres`
-`pg.auth.username` | Username for the 'airflow' user in PostgreSQL | `airflow`
-`pg.auth.password` | Password for the 'airflow' user in PostgreSQL | `airflow`
-`pg.auth.database` | Database name in PostgreSQL | `airflow`
-`pg.primary.networkPolicy.enabled` | Flag indicating whether network policy is enabled for the primary node | `false`
-`pg.primary.persistence.size` | Size of the PersistentVolumeClaim (PVC) for PostgreSQL data | `1Gi`
-</details>
-
-<details>
-<summary><code>redis.*</code></summary>
-
-Parameter | Description | Default
---- | --- | ---
-`redis.enabled` | Flag indicating whether Redis is enabled | `true`
-`redis.architecture` | Redis architecture | `standalone`
-`redis.networkPolicy.enabled` | Flag indicating whether network policy is enabled for Redis | `false`
-`redis.master.persistence.size` | Size of the PersistentVolumeClaim (PVC) for Redis data | `1Gi`
-</details>
-
-<details>
-<summary><code>commonSecrets.*</code></summary>
-
-Parameter | Description | Default
---- | --- | ---
-`commonSecrets.*` | Hardcoded values for secrets | *Various*
-</details>
-
-<details>
-<summary><code>init.*</code></summary>
-
-Parameter | Description | Default
---- | --- | ---
-`init.env` | Initialization environment variables | *Various*
-</details>
-
-<details>
-<summary><code>webserver.*</code></summary>
-
-Parameter | Description | Default
---- | --- | ---
-`webserver.replicaCount` | Number of replicas for the webserver | `1`
-`webserver.urlPrefix` | URL prefix for the webserver | `/cohesive`
-`webserver.service.type` | Service type for the webserver | `ClusterIP`
-`webserver.service.nodePorts.http` | Node port for HTTP | `30080`
-`webserver.service.nodePorts.https` | Node port for HTTPS | `30443`
-`webserver.service.ports.http` | Container port for HTTP | `8080`
-`webserver.service.ports.https` | Container port for HTTPS | `443`
-</details>
-
-<details>
-<summary><code>scheduler.*</code></summary>
-
-Parameter | Description | Default
---- | --- | ---
-`scheduler.replicaCount` | Number of replicas for the scheduler | `1`
-</details>
-
-<details>
-<summary><code>worker.*</code></summary>
-
-Parameter | Description | Default
---- | --- | ---
-`worker.replicaCount` | Number of replicas for the worker | `1`
-</details>
-
-<details>
-<summary><code>triggerer.*</code></summary>
-
-Parameter | Description | Default
---- | --- | ---
-`triggerer.replicaCount` | Number of replicas for the triggerer | `1`
-</details>
-
-<details>
-<summary><code>flower.*</code></summary>
-
-Parameter | Description | Default
---- | --- | ---
-`flower.enabled` | Flag indicating whether Flower is enabled | `true`
-`flower.urlPrefix` | URL prefix for Flower | `/flower`
-`flower.service.type` | Service type for Flower | `ClusterIP`
-</details>
-
-<details>
-<summary><code>ingress.*</code></summary>
-
-Parameter | Description | Default
---- | --- | ---
-`ingress.enabled` | Enable or disable the Ingress resource | `true`
-`ingress.class` | Specify the Ingress class to use | `nginx`
-`ingress.host` | Specify the host for the Ingress | `hewlettpackard.dev.internal`
-`ingress.tls.enabled` | Flag indicating whether TLS is enabled for ingress | `true`
-`ingress.tls.crt` | TLS certificate for the ingress | *Certificate data*
-`ingress.tls.key` | TLS key for the ingress | *Key data*
-</details>
+</html>
