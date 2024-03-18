@@ -36,9 +36,13 @@ spec:
           containerPort: 443
         securityContext:
           {{- include "airflow.securityContext" (dict "userID" 50000 "groupID" 0) | nindent 10 }}
+        {{- if .Values.webserver.urlPrefix }}
+        env:
+          {{- include "airflow.webserver.baseUrlEnv" . | nindent 8 }}
+        {{- end }}
         envFrom:
           {{- include "airflow.commonSecrets.env" . | nindent 8 }}
-        {{- include "airflow.probes" (dict "path" "/health" "port" "http" "probeType" "httpGet") | nindent 8 }}
+        {{- include "airflow.probes" (dict "path" (printf "%s/health" .Values.webserver.urlPrefix) "port" "http" "probeType" "httpGet") | nindent 8 }}
         volumeMounts:
         {{- include "airflow.home.volumeMount" . | nindent 8 }}
       volumes:

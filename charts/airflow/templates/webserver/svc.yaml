@@ -22,7 +22,7 @@ spec:
     {{- if eq .Values.webserver.service.type "NodePort" }}
     nodePort: {{ .Values.webserver.service.nodePorts.https | default 30443 }}
     {{- end }}
-    targetPort: 443
+    targetPort: https
   selector:
     {{- include "airflow.selectorLabels" . | nindent 4 }}
     app.kubernetes.io/component: webserver

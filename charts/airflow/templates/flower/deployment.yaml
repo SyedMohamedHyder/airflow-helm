@@ -30,6 +30,10 @@ spec:
         args:
         - celery
         - flower
+        {{- if .Values.flower.urlPrefix }}
+        - --url-prefix
+        - {{ .Values.flower.urlPrefix }}
+        {{- end }}
         envFrom:
           {{- include "airflow.commonSecrets.env" . | nindent 8 }}
         ports:
@@ -37,7 +41,7 @@ spec:
           containerPort: 5555
         securityContext:
           {{- include "airflow.securityContext" (dict "userID" 50000 "groupID" 0) | nindent 10 }}
-        {{- include "airflow.probes" (dict "path" "/" "port" "flower" "probeType" "httpGet") | nindent 8 }}
+        {{- include "airflow.probes" (dict "path" (printf "%s/workers" .Values.flower.urlPrefix) "port" "flower" "probeType" "httpGet") | nindent 8 }}
         volumeMounts:
         {{- include "airflow.home.volumeMount" . | nindent 8 }}
       volumes:
