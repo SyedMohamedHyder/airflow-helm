@@ -1,0 +1,16 @@
+apache-airflow-providers-atlassian-jira==2.3.0 # JIRA provider
+pydantic==1.10.9 # models
+pexpect==4.8.0 # execution of scripts as subprocess
+bs4==0.0.1 # download scid
+jsonpath-ng==1.5.2 # scid parsing
+PyYAML==6.0.1 # parsing yaml files
+Jinja2==3.1.2 # Jinja parser
+python-gnupg==0.5.1 # For managing gpg keys
+openpyxl==3.1.2 # Excel file creation
+ansible==9.3.0 # Playbook execution
+
+# Testing and linting
+pytest==7.4.0
+pytest-cov==4.1.0
+pytest-html==3.2.0
+pylint==2.17.4
