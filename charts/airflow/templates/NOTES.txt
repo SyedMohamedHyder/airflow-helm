@@ -1,14 +1,42 @@
-Get the Airflow Webserver URL:
-a. If your Kubernetes cluster is running on a cloud provider, you may need to configure an ingress controller or load balancer to expose the Airflow webserver externally. Please refer to your cloud provider's documentation for more information on setting up ingress or load balancing.
+{{- if .Values.ingress.enabled }}
+  {{- if .Values.ingress.host }}
 
-b. If your Kubernetes cluster is running in a local environment or on-premises and you have configured the service type as NodePort, you can access the Airflow webserver using the NodePort assigned to the service.
-    Example:
+    If your Kubernetes cluster is running in a local environment or on-premises and you have enabled ingress, you can access the Airflow webserver using the following commands.
+
+    Replace INGRESS_PORT in the below command with the port on which your ingress is exposed. In most cases, it should be either 80/443 if ingress is deployed as a LoadBalancer service.
+
+    {{- if .Values.ingress.tls.enabled }}
     ```
-    export NODE_IP=$(kubectl get nodes --selector='!node-role.kubernetes.io/master' -o jsonpath="{.items[0].status.addresses[?(@.type=='InternalIP')].address}")
-    export NODE_PORT=$(kubectl get svc airflow-webserver -o jsonpath="{.spec.ports[?(@.name=='http')].nodePort}")
+    INGRESS_HOST=$(kubectl get ingress {{ include "airflow.webserver.name" . }} -n {{ .Release.Namespace }} -o=jsonpath='{.spec.rules[0].host}')
+    INGRESS_PORT=443
+    URL_PREFIX="{{ .Values.webserver.urlPrefix }}"
+    echo "Airflow Webserver URL: https://$INGRESS_HOST:$INGRESS_PORT/$URL_PREFIX"
+    ```
+    {{- else }}
+    ```
+    INGRESS_HOST=$(kubectl get ingress {{ include "airflow.webserver.name" . }} -n {{ .Release.Namespace }} -o=jsonpath='{.spec.rules[0].host}')
+    INGRESS_PORT=80
+    URL_PREFIX="{{ .Values.webserver.urlPrefix }}"
+    echo "Airflow Webserver URL: http://$INGRESS_HOST:$INGRESS_PORT/$URL_PREFIX"
+    ```
+    {{- end }}
+
+    {{- else }}
+- Warning:
+    Ingress host is not defined. Please ensure that the ingress is correctly configured with a host.
+  {{- end }}
+{{- else }}
+    If your Kubernetes cluster is running in a local environment or on-premises and you have configured the service type as NodePort, you can access the Airflow webserver using the NodePort assigned to the service.
+
+    ```
+    NODE_IP=$(kubectl get nodes --selector='!node-role.kubernetes.io/master' -o jsonpath="{.items[0].status.addresses[?(@.type=='InternalIP')].address}")
+    NODE_PORT=$(kubectl get svc airflow-webserver -n {{ .Release.Namespace }} -o jsonpath="{.spec.ports[?(@.name=='http')].nodePort}")
     echo "Airflow Webserver URL: http://$NODE_IP:$NODE_PORT"
     ```
 
-    If the above NODE_IP is not accessible for you, try using http://localhost:$NODE_PORT to access the webserver if you are within the kubernetes cluster.
+    If the above NODE_IP is not accessible for you, try using http://localhost:$NODE_PORT to access the webserver if you are within the Kubernetes cluster.
+{{- end }}
 
-Note: Please ensure that your Kubernetes cluster's network policies and firewall rules allow access to the Airflow webserver service.
+Thank you for using this project! Please note that this Helm chart is intended for development and testing purposes only.
+It is not suitable for production deployment due to security considerations.
+Always review and adjust the configuration according to your specific requirements before deploying Airflow in a production environment.
