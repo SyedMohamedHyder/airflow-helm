@@ -80,6 +80,13 @@ Generate the full name for the airflow flower.
 {{- end -}}
 
 {{/*
+Generate the full name for the tls used for ingress.
+*/}}
+{{- define "airflow.tls.name" -}}
+{{- include "airflow.fullname" . }}-tls
+{{- end -}}
+
+{{/*
 Create chart name and version as used by the chart label.
 */}}
 {{- define "airflow.chart" -}}
@@ -200,6 +207,14 @@ This template creates a volume mount with the specified volume name.
 {{- end -}}
 
 {{/*
+Creates a base_url env to be added to the webserver.
+*/}}
+{{- define "airflow.webserver.baseUrlEnv" -}}
+- name: AIRFLOW__WEBSERVER__BASE_URL
+  value: http://localhost:8080{{ .Values.webserver.urlPrefix }}
+{{- end -}}
+
+{{/*
 Creates a common secret env to be added to a Pod.
 */}}
 {{- define "airflow.commonSecrets.env" -}}
@@ -219,10 +234,18 @@ runAsGroup: {{ $groupID }}
 {{- end -}}
 
 {{/*
-Generate the checksum for a specific file.
-This template calculates the SHA256 checksum of the specified file.
+Generate the checksum for the pvc and secret files.
+This template calculates the SHA256 checksum of the specified files.
 */}}
 {{- define "airflow.checksum" -}}
 checksum/persistence: {{ include (print $.Template.BasePath "/persistence.yaml") . | sha256sum }}
 checksum/secrets: {{ include (print $.Template.BasePath "/secrets.yaml") . | sha256sum }}
+{{- end -}}
+
+{{/*
+Generate the checksum for the tls file.
+This template calculates the SHA256 checksum of the tls file.
+*/}}
+{{- define "airflow.ingress.checksum" -}}
+checksum/tls: {{ include (print $.Template.BasePath "/tls.yaml") . | sha256sum }}
 {{- end -}}
