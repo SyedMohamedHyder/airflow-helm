@@ -1,3 +1,5 @@
+---
+
 nameOverride:  # Name override for the Helm release
 fullnameOverride:  # Full name override for the Helm release
 
@@ -57,7 +59,8 @@ redis:
 
 # Common Secrets configuration
 commonSecrets:
-  # Don't use the following defaults for secrets
+  # Hard coded values for secrets.
+  # Don't use the following defaults. They should be provided by some secrets manager like Vault.
   AIRFLOW__CORE__EXECUTOR: Q2VsZXJ5RXhlY3V0b3I=
   AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: cG9zdGdyZXNxbCtwc3ljb3BnMjovL2FpcmZsb3c6YWlyZmxvd0BhaXJmbG93LXBnL2FpcmZsb3c=
   AIRFLOW__CELERY__RESULT_BACKEND: ZGIrcG9zdGdyZXNxbDovL2FpcmZsb3c6YWlyZmxvd0BhaXJmbG93LXBnL2FpcmZsb3c=
@@ -83,9 +86,12 @@ init:
 webserver:
   # Number of replicas for the webserver
   replicaCount: 1
+  # URL prefix for the webserver
+  urlPrefix: /cohesive
+  # Service details for the webserver
   service:
     # Service type for the webserver
-    type: NodePort
+    type: ClusterIP
     nodePorts:
       # Node port for HTTP
       http: 30080
@@ -116,12 +122,37 @@ triggerer:
 flower:
   # Flag indicating whether Flower is enabled
   enabled: true
+  # URL prefix for the Flower
+  urlPrefix: /flower
+  # Service details for the Flower
   service:
     # Service type for Flower
-    type: NodePort
+    type: ClusterIP
     nodePorts:
       # Node port for Flower
       flower: 30555
     ports:
       # Container port for Flower
       flower: 5555
+
+# Ingress configuration
+ingress:
+  # Enable or disable the Ingress resource
+  enabled: true
+  # Specify the Ingress class to use
+  class: nginx
+  # Specify the host for the Ingress
+  host: hewlettpackard.dev.internal
+
+  # tls configuration for the ingress
+  # Hardcoded TLS certificate and key
+  # In a production scenario, it's recommended to store sensitive information like TLS certificates in a secure secret management service like HashiCorp Vault.
+  # However, for simplicity in this example, we're hardcoding the TLS certificate and key directly into the Helm chart.
+  # Make sure to replace these values with actual TLS certificates and keys in a real production deployment.
+  tls:
+    # Flag indicating whether TLS is enabled for ingress
+    enabled: true
+    # tls certificate for the ingress
+    crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURWVENDQWoyZ0F3SUJBZ0lVR3dxS25NSFVjZ3NvTkhJWW1UVnMxL3NyNDNJd0RRWUpLb1pJaHZjTkFRRUwKQlFBd0pqRWtNQ0lHQTFVRUF3d2JhR1YzYkdWMGRIQmhZMnRoY21RdVpHVjJMbWx1ZEdWeWJtRnNNQjRYRFRJMApNRE14TnpFeU5EUTBOVm9YRFRJMU1ETXhOekV5TkRRME5Wb3dKakVrTUNJR0ExVUVBd3diYUdWM2JHVjBkSEJoClkydGhjbVF1WkdWMkxtbHVkR1Z5Ym1Gc01JSUJJakFOQmdrcWhraUc5dzBCQVFFRkFBT0NBUThBTUlJQkNnS0MKQVFFQTFwaWhGb21QSnlDNWIweXpkUEN5U2lFZ2JYUUdHdHAvN2lzTWFjT3NOVUsvT2hGZ05JczBkS1VoVWEzbwowUVdrN01JRElQTklvQTloT3dIQnlXcHRqVTBsY3RpaE55QUhiaDhIR3ZtaDg5Nyt5bnQyV0JNL1l2c25EWVh0CmZTNU10ZHBONEl1L3BrdjJ3QVo0NlBnWkxidjZSM0xzWCtoNXl6WDhUYVRlTHBXY3o3S1ZZbnNjN2tIRWhYZWoKTVJabEtrbG1LUXBqaDd5SGVwdmNLUG91WlFUZGpZcFQ0c0Nva0JPS09yUE9nRlg2OEhtYnNMdlR5WEJjQzdlVwpuNFhhclJPUUtBc3l6UTI1akI0b2RnM1MveUhFOWN2WmJrRTlBeWR3VTJsNnFORlRadHBZcGNkZjJ2b2duSUhyCjhYbFdtWktDelBnd2lGai80eEJkSDlERitRSURBUUFCbzNzd2VUQWRCZ05WSFE0RUZnUVVzNFRtRUF2T0s5YjMKaEtpaFZJa05BOXQydG1vd0h3WURWUjBqQkJnd0ZvQVVzNFRtRUF2T0s5YjNoS2loVklrTkE5dDJ0bW93RHdZRApWUjBUQVFIL0JBVXdBd0VCL3pBbUJnTlZIUkVFSHpBZGdodG9aWGRzWlhSMGNHRmphMkZ5WkM1a1pYWXVhVzUwClpYSnVZV3d3RFFZSktvWklodmNOQVFFTEJRQURnZ0VCQU1yVlNxU2hyWnl1TWpNTVV3THc2WGx2RDlmVVBBZzEKLzVPclBBK0MvSC90MERSa0hXVmdVWW9TYkNIUHB2Uldoc0UyY0NDQ3VCS1hrOG5HN0RwQSsyWjQyUjd3VngrawpPWmp3UWlWa0NMWENHTlNncm9wUFhOeVNleFVHK0FrdzVvV2FWKzFFYWQ5dStCeWtaYzkxT1RoSDNPcHZjaTdwCm1VT2pqY1FDVkJIWjVyVlM2aVlhbUhDVFdxYmprbDBhNVJKTkJnTWQ4bXk4QmZmK3FNTjVtdFkwb0NHcWwrYlAKUnpzQ2xmRDhWa0ZCRExjTEczdHV1Y1gyM0VvS3ZiNnFpREZoaFgvRmR0MWlyZXB5MmREWWJITW5oVG12cGtPUgoySFIranNERFdpTjYxaG1QRW1NV1EzeTBuYU5TMzN6YzQ1K3F0STVCQm95ZVdDelhReFJXVXJzPQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==
+    # tls key for the ingress
+    key: LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tCk1JSUV2Z0lCQURBTkJna3Foa2lHOXcwQkFRRUZBQVNDQktnd2dnU2tBZ0VBQW9JQkFRRFdtS0VXaVk4bklMbHYKVExOMDhMSktJU0J0ZEFZYTJuL3VLd3hwdzZ3MVFyODZFV0EwaXpSMHBTRlJyZWpSQmFUc3dnTWc4MGlnRDJFNwpBY0hKYW0yTlRTVnkyS0UzSUFkdUh3Y2ErYUh6M3Y3S2UzWllFejlpK3ljTmhlMTlMa3kxMmszZ2k3K21TL2JBCkJuam8rQmt0dS9wSGN1eGY2SG5MTmZ4TnBONHVsWnpQc3BWaWV4enVRY1NGZDZNeEZtVXFTV1lwQ21PSHZJZDYKbTl3bytpNWxCTjJOaWxQaXdLaVFFNG82czg2QVZmcndlWnV3dTlQSmNGd0x0NWFmaGRxdEU1QW9DekxORGJtTQpIaWgyRGRML0ljVDF5OWx1UVQwREozQlRhWHFvMFZObTJsaWx4MS9hK2lDY2dldnhlVmFaa29MTStEQ0lXUC9qCkVGMGYwTVg1QWdNQkFBRUNnZ0VBRExNWXoyVzNJaVNTak1hNjFRMW5MbHkzclBxTU5QRWdMVEdyZms2Q2tGNnMKUkplMjBZMDVGQkVaLzhTSURoSDUyMlZma1liaGtmcXZCcDFaUVBOS2hlMmVRbnNWcEFGQ0owOGJRM1QrcVFQQQpvTmpUSFZobGx5bzZwVmNsd1pOOTh5ek1PelpuVWxtckFkeXdNWnROeENlSElzelI0UnJOS3d5U3dKYVBRUzJQCmVwU3dLcUNPN0xWUnFqOUhjWHJxVVlMbEJwVEtjYnc2SXN4Z1NJempOYTNOZ0VKN2hqQnc5NE5WUkp2V3c0QzkKNVFyNC9CSGV4NWV0SHFPZFdWUWk3TUU0a0pnMGxiSUwzZnVVYTU5bVhDSmNVaDE2NzVxMTg2ejhpRjU2MVNKegpwVWVVRWtIMkpjb242WE5yek12WDdYc01ubVY5NDErckN5NWlxeUN6WFFLQmdRRFoxSjVoNTlLUDQrQVE5SFluCmhTcUsrN201Q0xIR2JCMXFzL213TjFWUlNOMHBZenpSY21JbDJrTjE3c1g1dWNEWkV2OUZPV2w1VURxeGlQVGEKc0Nod25RQjNvaUJKRGpsb282MG0wVEZWd29neDhBYTZNREhmM1Njb2FvVCtaRTlJc29DT3ZMVjJFS1NlVUtGOAowQ1R5WlFxdWl5UjU4VlV1Tk1MOWNaVnNSUUtCZ1FEOE11ejg3bjE2ZUQwVGg1MVZYQnRqM3RLU1BHSXBNdmNvCkpqbnhPYVBlRVhTcitJajhCeG8yRkhPYU5mUHZKUW1IdWlQbitzOXphT29ibWxDaHlnemdHRUxBMWJ3RHhtT3gKc3VXMlJKWWdxKzY0VFJ2RXVjWVBaUjVDOG1GT2VxdGRncm9KSjhIZXprVFVQZDlVRkt5cVpIeFdaR1Zob3owbQpxRTVMK0ttZ0pRS0JnQ3RqZklESDZsc2E2c0MxME9zaVRVME53dnFtVHJMVlNpNjgxcGxSREQ5Nm9nTGliM1RRCnNkZ1VWNmVmL2ZNMkdzR2lWUkoyMHhtRTc0djVXYnhOcG1CNEJXWE85MXRWNS8xOXpMbVVwWjBOZUk5cDNnMHMKR0dNYzYvWFM4ZGF5S0ZDMHJZTEE5K3dpZUlmSVM4Sk91MjFFenhIaFNVeTQwMXkyeWJndDdiTjVBb0dCQUxjaApyNjhXNnV6VWhOMDZtOGZSSTE2SS9mVU1mZWNXeUJ4U2JiNjVzVUZmQVk2aTRhM0k1b0tncFRVMHVsWk1XYmhDCk5US05rTGhvVlo4SGxrZDFkWllBWi9DcEEyYm1WNXhBb01lUzFFVVRORHlHV1lTbnRhZVdNTHhDVHVCeStSN2sKLzN3SWI2SC92RUUyVUlZNG9RejEvTWVyRFdjeDV3UzhNR2JBUVVRMUFvR0JBTmJyWXd6dUVRWGVzNGRINVZDeQpMMDVtdzFjODc5OU9aK2dlWHp3M1hWUU1BbysyM0VidmY4K21VUG9rMnlqdE4rV1l1cWVsRU5HK2FEYkdTWEJRCmJxRFdFaWtSNVNSeEpTLzBCZjdzQkxlekZ6NnlseThLV3dBYU5EOURWcG00WmpwZ3FjNkNuRVdOdldyVzBPWEkKS041R0ExNlV3dDY2dDRGa0VrRkxKZXhrCi0tLS0tRU5EIFBSSVZBVEUgS0VZLS0tLS0K
