@@ -5,8 +5,8 @@ name: airflow
 description: A Helm chart for kick starting your development in Cohesive Build.
 
 type: application
-version: 1.0.1
-appVersion: "1.0.1"
+version: 1.0.2
+appVersion: "1.0.2"
 
 dependencies:
   - name: postgresql

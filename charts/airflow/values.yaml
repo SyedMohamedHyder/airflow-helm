@@ -145,6 +145,32 @@ ingress:
   # Specify the host for the Ingress
   host: hewlettpackard.dev.internal
 
+  # Annotations for the webserver component
+  # These annotations configure NGINX behavior for the webserver component
+  webserver:
+    annotations:
+      # Redirect HTTP traffic to HTTPS
+      nginx.ingress.kubernetes.io/ssl-redirect: "true"
+      # Maximum acceptable body size of a client request
+      nginx.ingress.kubernetes.io/proxy-body-size: "0"
+      # Timeout for reading a client request body
+      nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
+      # Timeout for transmitting a response to the client
+      nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
+
+  # Annotations for the flower component
+  # These annotations configure NGINX behavior for the flower component
+  flower:
+    annotations:
+      # Redirect HTTP traffic to HTTPS
+      nginx.ingress.kubernetes.io/ssl-redirect: "true"
+      # Maximum acceptable body size of a client request
+      nginx.ingress.kubernetes.io/proxy-body-size: "0"
+      # Timeout for reading a client request body
+      nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
+      # Timeout for transmitting a response to the client
+      nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
+
   # tls configuration for the ingress
   # Hardcoded TLS certificate and key
   # In a production scenario, it's recommended to store sensitive information like TLS certificates in a secure secret management service like HashiCorp Vault.

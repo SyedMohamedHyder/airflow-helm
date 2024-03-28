@@ -8,11 +8,11 @@ metadata:
   labels:
     {{- include "airflow.labels" . | nindent 4 }}
     app.kubernetes.io/component: flower-ingress
-  {{- if .Values.ingress.tls.enabled }}
   annotations:
-    {{- include "airflow.ingress.checksum" . | nindent 4 }}
-    nginx.ingress.kubernetes.io/ssl-redirect: "true"
-  {{- end }}
+    {{- if .Values.ingress.tls.enabled }}
+      {{- include "airflow.ingress.checksum" . | nindent 4 }}
+    {{- end }}
+    {{- toYaml .Values.ingress.flower.annotations | nindent 4 }}
 spec:
   ingressClassName: {{ .Values.ingress.class }}
   {{- if .Values.ingress.tls.enabled }}
