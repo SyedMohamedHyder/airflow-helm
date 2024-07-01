@@ -19,7 +19,7 @@ persistence:
   storageClassName: manual
   # Path for the hostPath
   # Replace with your airflow home
-  path: "/C/Users/kunmeer/go/src/github.com/cmo-pce-e2e-build"
+  path: "/C/Users/kunmeer/go/src/github.com/cohesive-build"
 
 # PostgreSQL configuration
 pg:
