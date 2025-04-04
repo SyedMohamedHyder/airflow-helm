@@ -27,7 +27,7 @@ RUN curl -L https://github.com/PowerShell/PowerShell/releases/download/v7.4.1/po
     && tar zxf /tmp/powershell.tar.gz -C /opt/microsoft/powershell/7
 
 # Stage 2: Final stage
-FROM apache/airflow:2.7.3-python3.10
+FROM apache/airflow:2.10.4-python3.10
 
 # Set proxy arguments as build arguments
 ARG http_proxy

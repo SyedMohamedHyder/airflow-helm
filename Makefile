@@ -4,7 +4,7 @@
 .PHONY: build
 build:
 	docker build -f docker/Dockerfile \
-		-t syedhyder1362k/cohesive
+		-t syedhyder1362k/cohesive:latest \
 		--build-arg http_proxy=${http_proxy} \
 		--build-arg https_proxy=${https_proxy} \
 		--build-arg HTTP_PROXY=${HTTP_PROXY} \
