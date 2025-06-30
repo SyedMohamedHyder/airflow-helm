@@ -44,6 +44,8 @@ ENV HTTP_PROXY=${HTTP_PROXY}
 ENV HTTPS_PROXY=${HTTPS_PROXY}
 ENV no_proxy=${no_proxy}
 ENV NO_PROXY=${NO_PROXY}
+ENV AIRFLOW_HOME=/opt/airflow
+ENV PYTHONPATH="${AIRFLOW_HOME}/src:${PYTHONPATH:-}"
 
 # Switch to root user to install dependencies
 USER root
