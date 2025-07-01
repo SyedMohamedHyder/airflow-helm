@@ -64,6 +64,9 @@ RUN chmod +x /opt/microsoft/powershell/7/pwsh
 # Create a symbolic link for PowerShell binary
 RUN ln -s /opt/microsoft/powershell/7/pwsh /usr/bin/pwsh
 
+# Create the /opt/updates directory and set ownership
+RUN mkdir -p /opt/updates && chown airflow:airflow /opt/updates
+
 # Switch back to the airflow user
 USER airflow
 
