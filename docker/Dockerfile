@@ -65,7 +65,7 @@ RUN chmod +x /opt/microsoft/powershell/7/pwsh
 RUN ln -s /opt/microsoft/powershell/7/pwsh /usr/bin/pwsh
 
 # Create the /opt/updates directory and set ownership
-RUN mkdir -p /opt/updates && chown airflow:airflow /opt/updates
+RUN mkdir -p /opt/updates && chown airflow:root /opt/updates
 
 # Switch back to the airflow user
 USER airflow
