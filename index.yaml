@@ -2,6 +2,27 @@ apiVersion: v1
 entries:
   airflow:
   - apiVersion: v2
+    appVersion: 2.3.0
+    created: "2025-07-01T08:48:18.125465576Z"
+    dependencies:
+    - alias: pg
+      condition: pg.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 14.0.1
+    - alias: redis
+      condition: redis.enabled
+      name: redis
+      repository: https://charts.bitnami.com/bitnami
+      version: 18.12.1
+    description: A Helm chart for kick starting your development in Cohesive Build.
+    digest: a2e613168112527df3ab39e2d353980f383debe8484b243a6adf58e2683c90c8
+    name: airflow
+    type: application
+    urls:
+    - https://github.com/SyedMohamedHyder/airflow-helm/releases/download/airflow-2.3.0/airflow-2.3.0.tgz
+    version: 2.3.0
+  - apiVersion: v2
     appVersion: 2.2.2
     created: "2025-07-01T07:41:42.754520219Z"
     dependencies:
@@ -274,4 +295,4 @@ entries:
     urls:
     - https://github.com/SyedMohamedHyder/airflow-helm/releases/download/airflow-0.1.0/airflow-0.1.0.tgz
     version: 0.1.0
-generated: "2025-07-01T07:41:42.754627219Z"
+generated: "2025-07-01T08:48:18.125557739Z"
