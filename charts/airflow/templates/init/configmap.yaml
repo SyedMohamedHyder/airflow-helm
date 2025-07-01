@@ -50,6 +50,6 @@ data:
       echo "   https://airflow.apache.org/docs/apache-airflow/stable/howto/docker-compose/index.html#before-you-begin"
       echo
     fi
-    mkdir -p /opt/airflow/logs /opt/airflow/dags /opt/airflow/plugins /opt/airflow/config
-    chown -R "${AIRFLOW_UID}:0" /opt/airflow/{logs,dags,plugins,config}
+    mkdir -p /opt/airflow/logs /opt/airflow/dags /opt/airflow/plugins /opt/airflow/config /opt/updates
+    chown -R "${AIRFLOW_UID}:0" /opt/airflow/{logs,dags,plugins,config} /opt/updates
     exec /entrypoint airflow version
