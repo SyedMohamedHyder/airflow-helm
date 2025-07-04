@@ -44,8 +44,12 @@ ENV HTTP_PROXY=${HTTP_PROXY}
 ENV HTTPS_PROXY=${HTTPS_PROXY}
 ENV no_proxy=${no_proxy}
 ENV NO_PROXY=${NO_PROXY}
+
+# Cohesive specific envs
 ENV AIRFLOW_HOME=/opt/airflow
-ENV PYTHONPATH="${AIRFLOW_HOME}/src:${PYTHONPATH:-}"
+ENV PYTHONPATH=${AIRFLOW_HOME}/src:${AIRFLOW_HOME}/src/core
+ENV SOLUTIONS='{"PCE": "PCE", "DPCE": "DPCE", "PC-AI": "PC-AI"}'
+
 
 # Switch to root user to install dependencies
 USER root
